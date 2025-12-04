@@ -1,0 +1,1118 @@
+/* ============================================================
+   1. ROOT VARIABLES (LIGHT THEME)
+============================================================ */
+:root {
+    --bg-body: #FFF5E6;           /* page background */
+    --bg-card: #FFFFFF;           /* containers/cards */
+    --bg-header: rgba(255, 158, 68, 0.96);
+
+    --accent: #FF7A00;
+    --accent-soft: #FF9740;
+    --accent-yellow: #FFD236;
+    --accent-green: #22C55E;
+
+    --text-main: #3F2A20;         /* main text on page bg */
+    --text-muted: #8B5E3C;
+
+    --border-subtle: #FFC999;
+
+    --radius-lg: 20px;
+    --radius-md: 12px;
+
+    --shadow-soft: 0 18px 45px rgba(255, 158, 68, 0.18);
+    --shadow-strong: 0 24px 60px rgba(15, 23, 42, 0.18);
+
+    --transition-fast: 0.18s ease-out;
+    --transition-med: 0.25s ease-out;
+
+    --container-width: 1100px;
+}
+
+/* ============================================================
+   2. DARK MODE VARIABLE OVERRIDES
+============================================================ */
+body.dark-mode {
+    --bg-body: #05070B;
+    --bg-header: rgba(15, 23, 42, 0.96);
+
+    --text-main: #E5E7EB;
+    --text-muted: #9CA3AF;
+    --border-subtle: #374151;
+
+    background: var(--bg-body);
+    color: var(--text-main);
+}
+
+/* ============================================================
+   3. GLOBAL RESET & LAYOUT
+============================================================ */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg-body);
+    color: var(--text-main);
+    transition: background 0.25s ease, color 0.25s ease;
+}
+
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 1.25rem;
+}
+
+.site-main {
+    padding-top: 96px;
+    padding-bottom: 48px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ============================================================
+   4. HEADER / TOP BAR
+============================================================ */
+.site-header {
+    position: fixed;
+    inset-inline: 0;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(10px);
+    background: var(--bg-header);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.85rem 0;
+}
+
+.site-logo {
+    height: 60px;
+    width: auto;
+    border-radius: 10px;
+}
+
+/* Right side: theme + profile + hamburger */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Dark-mode toggle icon */
+#themeToggle {
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 0.35rem 0.55rem;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #111827;
+    transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+#themeToggle:hover {
+    transform: translateY(-1px);
+}
+
+body.dark-mode #themeToggle {
+    background: rgba(15, 23, 42, 0.9);
+    color: #F9FAFB;
+}
+
+/* Profile button */
+.profile-btn {
+    display: inline-flex;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: none;
+}
+
+/* Avatar image (header) */
+img.avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    border: 2px solid #fff;
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.45);
+}
+
+/* Initials fallback */
+.initials {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    border: 2px solid #fff;
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.45);
+}
+
+/* Avatar glow in dark mode */
+body.dark-mode img.avatar,
+body.dark-mode .initials {
+    box-shadow:
+        0 0 8px rgba(255, 180, 90, 0.45),
+        0 0 16px rgba(255, 140, 60, 0.35);
+    border-color: #FFD9A3;
+}
+
+/* ============================================================
+   5. HAMBURGER BUTTON & SLIDE-OUT MENU
+============================================================ */
+.hamburger {
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 0.35rem 0.75rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: none;
+    transition: background 0.2s, transform 0.2s;
+}
+
+body.dark-mode .hamburger {
+    background: rgba(255, 255, 255, 0.08);
+    color: #F9FAFB;
+}
+
+.hamburger:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Overlay behind menu */
+.mobile-menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 80;
+}
+
+.mobile-menu-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Slide-out drawer */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    right: -320px;
+    width: 280px;
+    height: 100vh;
+    background: var(--bg-header);
+    backdrop-filter: blur(12px);
+    box-shadow: -4px 0 25px rgba(0, 0, 0, 0.4);
+    border-radius: 18px 0 0 18px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: right 0.33s cubic-bezier(.4, 0, .2, 1);
+    z-index: 100;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.mobile-menu.open {
+    right: 0;
+}
+
+.mobile-menu a {
+    text-decoration: none;
+    color: #111827;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 0.7rem 1rem;
+    border-radius: 12px;
+    transition: 0.25s ease;
+    font-size: 0.98rem;
+}
+
+.mobile-menu a:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(5px);
+}
+
+body.dark-mode .mobile-menu {
+    background: rgba(15, 23, 42, 0.98);
+}
+
+body.dark-mode .mobile-menu a {
+    color: #E5E7EB;
+}
+
+/* ============================================================
+   6. BUTTONS
+============================================================ */
+.btn {
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    border-radius: 999px;
+    padding: 0.5rem 1.3rem;
+    font-size: 0.92rem;
+    transition: background var(--transition-med),
+                transform var(--transition-fast),
+                box-shadow var(--transition-med),
+                color var(--transition-fast),
+                border-color var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    text-decoration: none;
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+    color: #ffffff;
+    box-shadow: 0 12px 30px rgba(255, 122, 0, 0.35);
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 18px 40px rgba(255, 122, 0, 0.48);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid rgba(255, 158, 68, 0.6);
+}
+
+.btn-outline:hover {
+    background: rgba(255, 158, 68, 0.08);
+}
+
+/* Outline buttons in dark mode sit mostly on white cards */
+body.dark-mode .btn-outline {
+    color: #111827;
+    border-color: #475569;
+}
+
+/* Special: Ponche Crème outline on hero */
+.btn-outline[href="ponche-creme.php"] {
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+}
+
+/* Admin header button */
+.admin-button {
+    background: #FF7A00;
+    padding: 8px 14px;
+    border-radius: 999px;
+    color: #ffffff !important;
+    font-weight: 600;
+    margin-left: 1rem;
+    box-shadow: 0 12px 28px rgba(255, 122, 0, 0.4);
+}
+.admin-button:hover {
+    background: #E06900;
+    transform: translateY(-1px);
+}
+
+/* Delete buttons */
+.delete-btn,
+.delete-button,
+.btn-delete {
+    color: #DC2626;
+}
+
+/* ============================================================
+   7. HERO SECTION
+============================================================ */
+.hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: center;
+    margin-top: 2.5rem;
+}
+
+.hero-text h1 {
+    font-size: clamp(2.2rem, 3vw, 2.9rem);
+    margin-bottom: 0.6rem;
+}
+
+.hero-text p {
+    color: var(--text-muted);
+    max-width: 26rem;
+    line-height: 1.5;
+    margin-bottom: 1.2rem;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.hero-image {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.hero-card {
+    background: radial-gradient(circle at top left, #FFD236 0, #FF9F40 40%, #FF7A00 100%);
+    border-radius: 24px;
+    padding: 1.6rem;
+    box-shadow: 0 18px 40px rgba(255, 158, 68, 0.4);
+    max-width: 320px;
+    color: #3F2A20;
+}
+
+/* Keep hero card light in dark mode */
+body.dark-mode .hero-card {
+    background: #ffffff;
+    color: #111827;
+}
+
+/* ============================================================
+   8. CARDS & GRIDS (PRODUCTS, ORDERS, FAQ, AUTH, GALLERY)
+============================================================ */
+.cards-grid {
+    margin-top: 2.5rem;
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+
+.card,
+.order-card,
+.faq-item,
+.auth-card,
+.gallery-item {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-soft);
+    transition: transform var(--transition-fast),
+                box-shadow var(--transition-med),
+                border-color var(--transition-fast),
+                background var(--transition-fast);
+}
+
+/* Hover for generic card tiles */
+.card:hover,
+.order-card:hover,
+.gallery-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-strong);
+    border-color: rgba(255, 122, 0, 0.7);
+}
+
+/* Titles & text inside containers – dark on white cards */
+.card h3,
+.card p,
+.hero-card h2,
+.hero-card p,
+.order-card h3,
+.order-card p,
+.faq-item h3,
+.faq-item p,
+.auth-card h3,
+.auth-card p,
+.gallery-item h3,
+.gallery-item p {
+    color: #111827;
+}
+
+/* In dark mode, keep these containers white with dark text */
+body.dark-mode .card,
+body.dark-mode .order-card,
+body.dark-mode .faq-item,
+body.dark-mode .auth-card,
+body.dark-mode .gallery-item {
+    background: #ffffff;
+    border-color: #D4D4D8;
+    box-shadow: none;
+}
+
+/* ============================================================
+   9. TYPOGRAPHY & BASIC SECTIONS
+============================================================ */
+h1 {
+    margin-top: 2.2rem;
+    margin-bottom: 0.6rem;
+}
+
+h2,
+h3 {
+    margin-top: 1.4rem;
+    margin-bottom: 0.4rem;
+}
+
+p {
+    line-height: 1.6;
+}
+
+.section-cta {
+    margin-top: 2rem;
+    color: var(--text-muted);
+}
+
+/* Dark mode general headings/text on bare page background */
+body.dark-mode .site-main > h1,
+body.dark-mode .site-main > h2,
+body.dark-mode .site-main > h3,
+body.dark-mode .hero-text h1,
+body.dark-mode .hero-text h2,
+body.dark-mode .hero-text h3,
+body.dark-mode .page-title {
+    color: #F9FAFB;
+}
+
+body.dark-mode .hero-text p {
+    color: #CBD5E1;
+}
+
+/* Links on dark background */
+body.dark-mode a {
+    color: #FBBF77;
+}
+
+/* ============================================================
+   10. FORMS (CONTACT, LOGIN, ETC.)
+============================================================ */
+.contact-form,
+.auth-card form {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.contact-form label,
+.auth-card label {
+    display: grid;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+    color: #1F2933;
+}
+
+/* Form inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea {
+    border-radius: 12px;
+    border: 1px solid rgba(255, 158, 68, 0.5);
+    background: #FFFFFF;
+    color: #1F2933;
+    font: inherit;
+    padding: 0.55rem 0.8rem;
+    outline: none;
+    transition: border var(--transition-fast),
+                box-shadow var(--transition-fast),
+                background var(--transition-fast),
+                transform var(--transition-fast);
+}
+
+input:focus,
+textarea:focus {
+    border-color: var(--accent-soft);
+    box-shadow: 0 0 0 1px rgba(255, 122, 0, 0.4);
+    background: #FFFDF7;
+    transform: translateY(-1px);
+}
+
+/* Keep inputs light in dark mode too (for cards/forms) */
+body.dark-mode input,
+body.dark-mode textarea {
+    background: #FFFFFF;
+    color: #111827;
+    border-color: #D4D4D8;
+}
+
+/* Placeholder text visibility */
+body.dark-mode ::placeholder {
+    color: #9ca3af !important;
+}
+
+/* Alert styles */
+.alert {
+    padding: 0.6rem 0.8rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    margin-bottom: 0.8rem;
+}
+
+.alert-error {
+    background: rgba(248, 113, 113, 0.12);
+    border: 1px solid rgba(248, 113, 113, 0.6);
+    color: #B91C1C;
+}
+
+.alert-info {
+    background: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.6);
+    color: #075985;
+}
+
+/* Auth layout centering */
+.auth-wrapper {
+    min-height: calc(100vh - 120px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* Google auth button */
+.google-auth-wrapper {
+    margin-top: 1.4rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.google-auth-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    width: 100%;
+    padding: 0.65rem 1rem;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #444;
+    font-size: 0.92rem;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid #dadce0;
+    transition: all 0.18s ease-out;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.google-auth-btn:hover {
+    background: #f7f7f7;
+    border-color: #c6c6c6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.09);
+}
+
+.google-auth-btn:active {
+    transform: scale(0.98);
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Login / signup text behaviour */
+.auth-card,
+.auth-card *:not(h1):not(h2):not(h3) {
+    color: #000;
+}
+
+.auth-card h2,
+.auth-card h3 {
+    color: #111827;
+}
+
+/* ============================================================
+   11. CART & ORDERS (USER)
+============================================================ */
+/* Cart */
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    background: #FFFFFF;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+}
+
+.cart-table th,
+.cart-table td {
+    padding: 0.75rem 0.9rem;
+    text-align: left;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(255, 179, 102, 0.4);
+}
+
+.cart-table th {
+    background: #FFE6C2;
+}
+
+.cart-table tr:last-child td {
+    border-bottom: none;
+}
+
+.cart-total {
+    margin-top: 1rem;
+    font-size: 1.05rem;
+}
+
+.cart-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/* Orders list (my_orders.php) */
+.orders-list {
+    display: grid;
+    gap: 1.4rem;
+    margin-top: 1.6rem;
+}
+
+.order-card {
+    position: relative;
+}
+
+/* Order header layout */
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.order-date {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Status pill */
+.order-status {
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    text-transform: capitalize;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.order-status.pending {
+    background: rgba(250, 204, 21, 0.12);
+    border: 1px solid rgba(250, 204, 21, 0.35);
+    color: #B45309;
+}
+
+.order-status.completed,
+.order-status.paid {
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.45);
+    color: #166534;
+}
+
+.order-status.cancelled {
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.45);
+    color: #B91C1C;
+}
+
+.order-total {
+    font-weight: 600;
+    margin-top: 0.3rem;
+}
+
+/* Order items */
+.order-items {
+    margin-top: 1rem;
+}
+
+/* Table inside order card */
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.8rem;
+}
+
+.order-table th,
+.order-table td {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(255, 179, 102, 0.4);
+    font-size: 0.9rem;
+}
+
+.order-table th {
+    background: none;
+    color: var(--text-muted);
+}
+
+/* Dark mode tweaks just for order page */
+body.dark-mode .order-status.completed,
+body.dark-mode .order-status.paid {
+    color: #22C55E;
+}
+body.dark-mode .order-status.pending {
+    color: #facc15;
+}
+body.dark-mode .order-status.cancelled {
+    color: #F97373;
+}
+
+/* View Items button on white card in dark mode */
+body.dark-mode .order-card .btn-outline.toggle-details {
+    color: #111827;
+    border-color: #111827;
+}
+
+/* Order table text stays dark on white card in dark mode */
+body.dark-mode .order-card .order-table th,
+body.dark-mode .order-card .order-table td {
+    color: #111827;
+}
+
+/* ============================================================
+   12. GENERIC TABLES (ADMIN LIST PAGES)
+   Used by: admin_products.php, orders_admin.php, admin_users.php
+============================================================ */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.2rem;
+    font-size: 0.9rem;
+}
+
+thead tr {
+    background: #FFE6C2;
+}
+
+th,
+td {
+    padding: 0.7rem 0.9rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+/* Generic table rows */
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Admin area container tables look like cards */
+.container > table {
+    background: #FFFFFF;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 10px 32px rgba(15, 23, 42, 0.08);
+}
+
+/* Dark mode tables (admin pages etc.) */
+body.dark-mode thead tr {
+    background: #1F2937;
+}
+
+body.dark-mode th {
+    color: #F9FAFB;
+}
+
+body.dark-mode td {
+    color: #E5E7EB;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* But don't override order-table inside white order card or cart-table */
+body.dark-mode .order-card .order-table th,
+body.dark-mode .order-card .order-table td,
+body.dark-mode .cart-table th,
+body.dark-mode .cart-table td {
+    color: #111827;
+}
+
+/* Buttons inside admin tables */
+body.dark-mode .container > table .btn-outline {
+    color: #E5E7EB;
+    border-color: #E5E7EB;
+}
+
+/* Delete buttons remain red in both modes */
+body.dark-mode .delete-btn,
+body.dark-mode .delete-button,
+body.dark-mode .btn-delete {
+    color: #F97373;
+    border-color: #F97373;
+}
+
+/* Thumbnail images in admin products */
+.container > table img {
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* ============================================================
+   13. FOOTER
+============================================================ */
+.site-footer {
+    border-top: 1px solid var(--border-subtle);
+    background: linear-gradient(180deg, #FF9F40, #FF7A00);
+    padding-top: 1.6rem;
+    margin-top: 2.5rem;
+    color: #FFFDF5;
+}
+
+.footer-inner {
+    display: grid;
+    gap: 1.4rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    padding-bottom: 0.8rem;
+}
+
+.footer-bottom {
+    text-align: center;
+    font-size: 0.8rem;
+    padding: 0.8rem 0 1.1rem;
+    color: #FFFAEE;
+}
+
+/* Social buttons */
+.social-links {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-top: 0.4rem;
+}
+
+.social-btn {
+    padding: 0.35rem 0.8rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: 0.2s ease-in-out;
+    display: inline-block;
+}
+
+.social-btn.instagram {
+    background: linear-gradient(45deg, #fd1d1d, #e1306c, #c13584);
+    color: white;
+}
+.social-btn.instagram:hover {
+    opacity: 0.8;
+}
+
+.social-btn.facebook {
+    background: #1877f2;
+    color: white;
+}
+.social-btn.facebook:hover {
+    background: #0f5bd5;
+}
+
+.social-btn.tiktok {
+    background: #000;
+    color: #fff;
+}
+.social-btn.tiktok:hover {
+    background: #111;
+}
+
+/* ============================================================
+   14. CONTACT FORM LAYOUT
+============================================================ */
+textarea {
+    border-radius: 12px;
+    resize: vertical;
+}
+
+/* CONTACT FORM OUTER WRAPPER */
+.contact-form-container {
+    background: #ffffff;
+    padding: 2rem 2.2rem;
+    border-radius: 22px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-soft);
+    max-width: 650px;
+    margin: 2rem auto;
+}
+
+/* Dark mode version */
+body.dark-mode .contact-form-container {
+    background: #ffffff;
+    border-color: #d4d4d8;
+    box-shadow: none;
+}
+
+/* Rounded inputs */
+.contact-form input,
+.contact-form textarea {
+    border-radius: 14px;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(255, 158, 68, 0.4);
+    background: #ffffff;
+    color: #111;
+    transition: 0.18s ease;
+}
+
+/* Focus state */
+.contact-form input:focus,
+.contact-form textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(255, 122, 0, 0.25);
+    background: #FFF9F2;
+}
+
+/* Submit button full-width */
+.contact-form input[type="submit"],
+.contact-form button[type="submit"] {
+    border-radius: 999px;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* Headings inside contact card stay dark */
+.contact-form-container h1,
+.contact-form-container h2,
+.contact-form-container h3 {
+    color: #111827;
+}
+
+/* ============================================================
+   15. PROFILE PAGE CARDS
+============================================================ */
+.profile-section,
+.password-section {
+    background: #ffffff;
+    padding: 2rem 2.2rem;
+    border-radius: 22px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-soft);
+    max-width: 700px;
+    margin: 2rem auto;
+}
+
+/* Dark mode: keep cards white */
+body.dark-mode .profile-section,
+body.dark-mode .password-section {
+    background: #ffffff;
+    border-color: #d4d4d8;
+    box-shadow: none;
+}
+
+/* Inputs inside profile cards */
+.profile-section input,
+.password-section input {
+    border-radius: 14px;
+    padding: 0.75rem 1rem;
+}
+
+/* Buttons inside */
+.profile-section .btn,
+.password-section .btn {
+    border-radius: 999px;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* Headings inside cards */
+.profile-section h2,
+.password-section h2 {
+    color: #111827;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+/* Form labels */
+.profile-form label {
+    color: #111827;
+    font-weight: 500;
+}
+
+/* Layout */
+.profile-form {
+    display: grid;
+    gap: 1rem;
+}
+
+/* Two-column row for first + last name */
+.profile-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.profile-form input {
+    width: 100%;
+    border-radius: 14px;
+    padding: 0.75rem 1rem;
+}
+
+/* ============================================================
+   16. RESPONSIVE ADJUSTMENTS
+============================================================ */
+@media (max-width: 800px) {
+    .hero {
+        grid-template-columns: 1fr;
+    }
+    .hero-image {
+        justify-content: flex-start;
+    }
+    .two-column {
+        grid-template-columns: 1fr;
+    }
+}
+/* FIX ADMIN DASHBOARD CARD TEXT IN DARK MODE */
+body.dark-mode .admin-card,
+body.dark-mode .admin-card h2,
+body.dark-mode .admin-card h3,
+body.dark-mode .admin-card p,
+body.dark-mode .admin-card span {
+    color: #ffffff !important;
+}
+/* ============================================================
+   FIX: ADMIN DASHBOARD IN DARK MODE
+============================================================ */
+
+/* Make admin cards dark in dark mode */
+body.dark-mode .admin-card {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+/* Restore text visibility */
+body.dark-mode .admin-card h2,
+body.dark-mode .admin-card h3,
+body.dark-mode .admin-card p,
+body.dark-mode .admin-card span {
+    color: #f1f5f9 !important;
+}
+
+/* Icon background tint */
+body.dark-mode .admin-card .admin-card-icon {
+    background: rgba(255, 200, 120, 0.18) !important;
+}

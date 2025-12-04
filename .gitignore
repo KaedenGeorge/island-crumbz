@@ -1,0 +1,17 @@
+# Real config files with secrets
+config.php
+stripe_config.php
+*.env
+
+# User uploads - should live only on the server
+uploads/
+profile_photos/
+
+# Composer vendor directory - we install it on the server
+vendor/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
