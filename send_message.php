@@ -5,28 +5,30 @@ use PHPMailer\PHPMailer\Exception;
 require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
+require_once 'config.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    $name = $_POST['name'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $message = $_POST['message'] ?? '';
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $message = trim($_POST['message'] ?? '');
 
     $mail = new PHPMailer(true);
 
     try {
         // SMTP SETTINGS
         $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
+        $mail->Host = defined('SMTP_HOST') ? SMTP_HOST : 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'islandcrumbz@gmail.com';   // your Gmail
-        $mail->Password = 'fnat lrca bdbe dzuj';      // your Google App Password
+        $mail->Username = defined('SMTP_USER') ? SMTP_USER : '';
+        $mail->Password = defined('SMTP_PASS') ? SMTP_PASS : '';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
+        $mail->Port = defined('SMTP_PORT') ? SMTP_PORT : 587;
 
         // EMAIL CONTENT
         $mail->setFrom($email, $name);
-        $mail->addAddress('YOUR_GMAIL@gmail.com'); // where messages go TO
+        // Use the SMTP user as the recipient or a configured admin email
+        $mail->addAddress(defined('SMTP_USER') ? SMTP_USER : 'admin@example.com');
 
         $mail->isHTML(true);
         $mail->Subject = 'New Contact Form Message';

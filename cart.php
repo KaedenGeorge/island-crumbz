@@ -32,50 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_item'])) {
     }
 }
 
-// CHECKOUT (place order)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['checkout'])) {
-    if (!isLoggedIn()) {
-        // Force login before checkout
-        header("Location: login.php");
-        exit;
-    }
-
-    if (empty($_SESSION['cart'])) {
-        $message = "Your cart is empty.";
-    } else {
-        $user_id = $_SESSION['user_id'];
-        $total = 0;
-
-        foreach ($_SESSION['cart'] as $item) {
-            $total += $item['price'] * $item['quantity'];
-        }
-
-        // Insert into orders
-        $status = "pending";
-        $stmt = $conn->prepare("INSERT INTO orders (user_id, total, status) VALUES (?, ?, ?)");
-        $stmt->bind_param("ids", $user_id, $total, $status);
-        $stmt->execute();
-        $order_id = $stmt->insert_id;
-        $stmt->close();
-
-        // Insert each item into order_items
-        $stmtItem = $conn->prepare("INSERT INTO order_items (order_id, product_id, quantity, price_each) VALUES (?, ?, ?, ?)");
-        foreach ($_SESSION['cart'] as $item) {
-            $pid = $item['id'];
-            $qty = $item['quantity'];
-            $price_each = $item['price'];
-
-            $stmtItem->bind_param("iiid", $order_id, $pid, $qty, $price_each);
-            $stmtItem->execute();
-        }
-        $stmtItem->close();
-
-        // Clear cart
-        $_SESSION['cart'] = [];
-        $message = "Order placed successfully! Your order ID is #" . $order_id . ".";
-    }
-}
-
 include 'header.php';
 
 // Calculate totals for display

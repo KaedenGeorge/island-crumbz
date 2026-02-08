@@ -19,19 +19,41 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $price = $_POST['price'];
     $cat   = $_POST['category_id'];
     $image = $product['image'];
+    $message = "";
 
     if (!empty($_FILES['image']['name'])) {
-        $file = time() . "_" . $_FILES['image']['name'];
-        move_uploaded_file($_FILES['image']['tmp_name'], "uploads/".$file);
-        $image = "uploads/".$file;
+        $uploadDir = "uploads/";
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        $fileName = basename($_FILES['image']['name']);
+        // Sanitize filename
+        $fileName = preg_replace("/[^a-zA-Z0-9\._-]/", "", $fileName);
+        $targetFile = $uploadDir . time() . "_" . $fileName;
+
+        $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+        if (in_array($fileType, $allowedTypes)) {
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                $image = $targetFile;
+            } else {
+                $message = "Error uploading image.";
+            }
+        } else {
+            $message = "Invalid file type. Allowed: JPG, JPEG, PNG, GIF, WEBP.";
+        }
     }
 
-    $u = $conn->prepare("UPDATE products SET name=?,description=?,price=?,image=?,category_id=? WHERE id=?");
-    $u->bind_param("ssdssi", $name,$desc,$price,$image,$cat,$id);
-    $u->execute();
+    if (empty($message)) {
+        $u = $conn->prepare("UPDATE products SET name=?,description=?,price=?,image=?,category_id=? WHERE id=?");
+        $u->bind_param("ssdssi", $name, $desc, $price, $image, $cat, $id);
+        $u->execute();
 
-    header("Location: admin_products.php?updated=1");
-    exit;
+        header("Location: admin_products.php?updated=1");
+        exit;
+    }
 }
 
 include 'header.php';

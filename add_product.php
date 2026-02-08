@@ -15,16 +15,40 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $imagePath = "";
 
     if (!empty($_FILES['image']['name'])) {
-        $file = time() . "_" . $_FILES['image']['name'];
-        move_uploaded_file($_FILES['image']['tmp_name'], "uploads/" . $file);
-        $imagePath = "uploads/".$file;
+        $uploadDir = "uploads/";
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        $fileName = basename($_FILES['image']['name']);
+        // Sanitize filename
+        $fileName = preg_replace("/[^a-zA-Z0-9\._-]/", "", $fileName);
+        $targetFile = $uploadDir . time() . "_" . $fileName;
+
+        $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+        if (in_array($fileType, $allowedTypes)) {
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                $imagePath = $targetFile;
+            } else {
+                $message = "Error uploading image.";
+            }
+        } else {
+            $message = "Invalid file type. Allowed: JPG, JPEG, PNG, GIF, WEBP.";
+        }
     }
 
-    $stmt = $conn->prepare("INSERT INTO products (name,description,price,image,category_id) VALUES (?,?,?,?,?)");
-    $stmt->bind_param("ssdss",$name,$desc,$price,$imagePath,$cat);
-    $stmt->execute();
+    if (empty($message)) {
+        $stmt = $conn->prepare("INSERT INTO products (name,description,price,image,category_id) VALUES (?,?,?,?,?)");
+        $stmt->bind_param("ssdss", $name, $desc, $price, $imagePath, $cat);
 
-    $message = "Product Added!";
+        if ($stmt->execute()) {
+            $message = "Product Added!";
+        } else {
+            $message = "Database error: " . $conn->error;
+        }
+    }
 }
 
 include 'header.php';

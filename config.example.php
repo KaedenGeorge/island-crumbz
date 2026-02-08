@@ -42,6 +42,14 @@ $googleClientSecret = "YOUR_GOOGLE_CLIENT_SECRET";
 $googleRedirectURL  = "https://yourdomain.com/google-callback.php";
 
 /* ------------------------------------------------------------
+ *  SMTP SETTINGS (PLACEHOLDERS)
+ * ------------------------------------------------------------ */
+define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_USER', 'your_email@gmail.com');
+define('SMTP_PASS', 'your_app_password');
+define('SMTP_PORT', 587);
+
+/* ------------------------------------------------------------
  *  SESSION INITIALIZATION
  * ------------------------------------------------------------ */
 

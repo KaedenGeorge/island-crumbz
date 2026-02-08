@@ -58,6 +58,12 @@ if ($payment_method === 'card') {
     $stripe = stripeClient();
     $intent = $stripe->paymentIntents->retrieve($intent_id, []);
 
+    // Verify amount matches cart total
+    $expectedAmount = (int) round($cart_total * 100);
+    if ($intent->amount !== $expectedAmount) {
+         die("Payment error: Amount mismatch.");
+    }
+
     if ($intent->status === 'succeeded') {
         $status = 'paid';
     } else {
