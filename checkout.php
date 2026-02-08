@@ -239,6 +239,13 @@ let card = null;
 
 // Open modal
 document.getElementById("open-card-modal").addEventListener("click", () => {
+    // Basic validation before opening modal
+    const form = document.getElementById("checkout-form");
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
     if (!card) {
         card = elements.create("card");
         card.mount("#card-element");

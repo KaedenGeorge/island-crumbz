@@ -16,7 +16,7 @@
    <div class="contact-form-container">
     <h2>Contact Form</h2>
 
-    <form method="POST" action="" class="contact-form">
+    <form method="POST" action="send_message.php" class="contact-form">
         <label>Name</label>
         <input type="text" name="name" required>
 

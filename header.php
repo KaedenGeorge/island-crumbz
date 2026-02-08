@@ -5,10 +5,12 @@ require_once __DIR__ . "/config.php";
 $loggedIn = isset($_SESSION['user_id']);
 $photo = $_SESSION['profile_photo'] ?? null;
 
-function userInitials() {
-    $fn = $_SESSION['first_name'] ?? '';
-    $ln = $_SESSION['last_name'] ?? '';
-    return ($fn || $ln) ? strtoupper(($fn[0] ?? '') . ($ln[0] ?? '')) : "U";
+if (!function_exists('userInitials')) {
+    function userInitials() {
+        $fn = $_SESSION['first_name'] ?? '';
+        $ln = $_SESSION['last_name'] ?? '';
+        return ($fn || $ln) ? strtoupper(($fn[0] ?? '') . ($ln[0] ?? '')) : "U";
+    }
 }
 ?>
 <!DOCTYPE html>

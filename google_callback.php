@@ -5,9 +5,9 @@ require_once 'config.php';
 
 // Google client setup
 $client = new Google_Client();
-$client->setClientId('GOOGLE_CLIENT_ID');
-$client->setClientSecret('GOOGLE_CLIENT_SECRET');
-$client->setRedirectUri('GOOGLE_REDIRECT_URI');
+$client->setClientId($googleClientID);
+$client->setClientSecret($googleClientSecret);
+$client->setRedirectUri($googleRedirectURL);
 $client->addScope("email");
 $client->addScope("profile");
 
@@ -80,4 +80,3 @@ if ($result->num_rows === 1) {
 header("Location: index.php");
 exit;
 ?>
-699751271962-viuk6o9nair59mr341404hvvk1pitn70.apps.googleusercontent.com

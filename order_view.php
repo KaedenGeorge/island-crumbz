@@ -3,13 +3,24 @@ require_once 'config.php';
 if (session_status()===PHP_SESSION_NONE) session_start();
 if ($_SESSION['user_role'] !== 'admin') die("Access denied");
 
-$id = $_GET['id'];
+$id = (int) $_GET['id'];
 
-$order = $conn->query("SELECT * FROM orders WHERE id=$id")->fetch_assoc();
-$items = $conn->query("SELECT order_items.*, products.name 
+$stmt = $conn->prepare("SELECT * FROM orders WHERE id=?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$order = $stmt->get_result()->fetch_assoc();
+
+if (!$order) {
+    die("Order not found.");
+}
+
+$stmtItems = $conn->prepare("SELECT order_items.*, products.name
                        FROM order_items 
                        JOIN products ON products.id = order_items.product_id
-                       WHERE order_id=$id");
+                       WHERE order_id=?");
+$stmtItems->bind_param("i", $id);
+$stmtItems->execute();
+$items = $stmtItems->get_result();
 
 include 'header.php';
 ?>
