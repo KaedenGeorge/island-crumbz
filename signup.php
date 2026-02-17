@@ -30,21 +30,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->close();
 
     if (empty($errors)) {
-        // Hash password using SHA256 (same as login)
-        $hashed = hash("sha256", $pass);
+        // FIX: Secure password hashing
+        $hashed = password_hash($pass, PASSWORD_DEFAULT);
 
-        $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, email, password) 
-                                VALUES (?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, email, password, role) 
+                                VALUES (?, ?, ?, ?, 'user')");
         $stmt->bind_param("ssss", $first, $last, $email, $hashed);
-
+        
         if ($stmt->execute()) {
-            header("Location: login.php?signup=success");
+            header("Location: login.php?registered=1");
             exit;
         } else {
-            $errors[] = "Something went wrong. Try again.";
+            $errors[] = "Database error: " . $conn->error;
         }
-
-        $stmt->close();
     }
 }
 
@@ -52,7 +50,7 @@ include 'header.php';
 ?>
 
 <div class="auth-wrapper">
-    <h1>Create Your Account</h1>
+    <h1>Create Account</h1>
 
     <div class="auth-card">
 
@@ -89,14 +87,14 @@ include 'header.php';
         <div style="margin-top:1rem; text-align:center;">
             Already have an account? <a href="login.php">Log in</a>
         </div>
-<hr style="margin:1.4rem 0; opacity:0.3;">
+        
+        <hr style="margin:1.4rem 0; opacity:0.3;">
 
-<a href="google_login.php" class="btn btn-outline" style="width:100%; text-align:center;">
-    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
-         style="height:18px; vertical-align:middle; margin-right:6px;">
-    Sign Up with Google
-</a>
-
+        <a href="google_login.php" class="btn btn-outline" style="width:100%; text-align:center;">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
+                 style="height:18px; vertical-align:middle; margin-right:6px;">
+            Sign up with Google
+        </a>
     </div>
 </div>
 

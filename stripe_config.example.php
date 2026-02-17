@@ -1,6 +1,20 @@
 <?php
-// Example Stripe config – safe for GitHub
+// FILE: stripe_config.php
 
-// Use your test or live keys in config.php (not here)
-$stripeSecretKey = "YOUR_STRIPE_SECRET_KEY";
-$stripePublishableKey = "YOUR_STRIPE_PUBLISHABLE_KEY";
+require_once 'vendor/autoload.php';
+
+// 1. Log into your Stripe Dashboard
+// 2. Get your Secret Key (starts with sk_test_...) and Publishable Key (pk_test_...)
+// 3. Paste them below inside the quotes.
+
+$stripeSecretKey = "sk_test_YOUR_ACTUAL_SECRET_KEY_HERE";
+$stripePublishableKey = "pk_test_YOUR_ACTUAL_PUBLISHABLE_KEY_HERE";
+
+function stripeClient() {
+    global $stripeSecretKey;
+    return new \Stripe\StripeClient($stripeSecretKey);
+}
+
+// This variable is used in checkout.php for the frontend
+$stripe_public_key = $stripePublishableKey;
+?>

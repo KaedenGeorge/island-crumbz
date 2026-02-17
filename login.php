@@ -24,15 +24,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($result->num_rows === 1) {
         $row = $result->fetch_assoc();
 
-        // hash given password
-        $hashed = hash("sha256", $password);
-
-        if ($hashed === $row['password']) {
+        // FIX: Verify password hash securely
+        if (password_verify($password, $row['password'])) {
 
             // store login info
             $_SESSION['user_id'] = $row['id'];
             $_SESSION['user_email'] = $row['email'];
-            $_SESSION['user_role']  = $row['role'];  // VERY IMPORTANT
+            $_SESSION['user_role']  = $row['role'];
+            $_SESSION['first_name'] = $row['first_name'];
+            $_SESSION['last_name']  = $row['last_name'];
+            $_SESSION['profile_photo'] = $row['profile_photo'];
 
             $stmt->close();
             header("Location: index.php");
@@ -56,6 +57,10 @@ include 'header.php';
     <div class="auth-card">
         <?php if ($error): ?>
             <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
+        <?php endif; ?>
+        
+        <?php if (isset($_GET['registered'])): ?>
+            <div class="alert alert-info">Account created! Please log in.</div>
         <?php endif; ?>
 
         <form method="post">

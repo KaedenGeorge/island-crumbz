@@ -7,7 +7,13 @@ if ($_SESSION['user_role'] !== 'admin') die("Access denied");
 // Promote user
 if (isset($_GET['promote'])) {
     $uid = $_GET['promote'];
-    $conn->query("UPDATE users SET role='admin' WHERE id=$uid");
+    
+    // FIX: Use prepared statement
+    $stmt = $conn->prepare("UPDATE users SET role='admin' WHERE id=?");
+    $stmt->bind_param("i", $uid);
+    $stmt->execute();
+    $stmt->close();
+
     header("Location: admin_users.php");
     exit;
 }

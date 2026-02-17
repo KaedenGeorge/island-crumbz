@@ -5,11 +5,23 @@ if ($_SESSION['user_role'] !== 'admin') die("Access denied");
 
 $id = $_GET['id'];
 
-$order = $conn->query("SELECT * FROM orders WHERE id=$id")->fetch_assoc();
-$items = $conn->query("SELECT order_items.*, products.name 
+// FIX: Use prepared statement for Order
+$stmt = $conn->prepare("SELECT * FROM orders WHERE id=?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$order = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+if (!$order) die("Order not found");
+
+// FIX: Use prepared statement for Items
+$stmtItems = $conn->prepare("SELECT order_items.*, products.name 
                        FROM order_items 
                        JOIN products ON products.id = order_items.product_id
-                       WHERE order_id=$id");
+                       WHERE order_id=?");
+$stmtItems->bind_param("i", $id);
+$stmtItems->execute();
+$items = $stmtItems->get_result();
 
 include 'header.php';
 ?>
@@ -17,7 +29,7 @@ include 'header.php';
 <div class="container">
     <h1>Order #<?= $id ?></h1>
 
-    <p><strong>Status:</strong> <?= $order['status'] ?></p>
+    <p><strong>Status:</strong> <?= htmlspecialchars($order['status']) ?></p>
     <p><strong>Total:</strong> $<?= number_format($order['total'],2) ?></p>
 
     <h2>Items</h2>
@@ -33,7 +45,7 @@ include 'header.php';
         <tbody>
         <?php while($i = $items->fetch_assoc()): ?>
             <tr>
-                <td><?= $i['name'] ?></td>
+                <td><?= htmlspecialchars($i['name']) ?></td>
                 <td><?= $i['quantity'] ?></td>
                 <td>$<?= number_format($i['price_each'],2) ?></td>
                 <td>$<?= number_format($i['quantity'] * $i['price_each'],2) ?></td>

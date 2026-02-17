@@ -18,15 +18,17 @@
 </section>
 
 <section class="cards-grid">
-    <div class="card">
+    <div class="card image-card" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('assets/img/cake-bg.jpg');">
         <h3>Custom Cake Orders</h3>
         <p>Birthday, wedding, or just because. Tell us your flavour and design.</p>
     </div>
-    <div class="card">
+
+    <div class="card image-card" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('assets/img/ponche-bg.jpg');">
         <h3>Ponche Crème</h3>
         <p>Creamy, spiced, and made in small batches with premium ingredients.</p>
     </div>
-    <div class="card">
+
+    <div class="card image-card" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('assets/img/delivery-bg.jpg');">
         <h3>Local Delivery</h3>
         <p>Freshly made and delivered chilled to your door (selected areas).</p>
     </div>
